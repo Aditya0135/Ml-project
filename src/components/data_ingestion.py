@@ -7,6 +7,8 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 """
 this class wil configure the data ingestion component 
 It will define things like where to store raw data
@@ -57,4 +59,6 @@ class dataIngestion:
 
 if __name__=="__main__":
     obj=dataIngestion()
-    obj.initiate_data_ingestion()
+    train_data, test_data = obj.initiate_data_ingestion()
+    data_transformation= DataTransformation()
+    data_transformation.initialize_data_transformation(train_data,test_data)
