@@ -9,6 +9,8 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
+from src.components.model_trainer import modelTrainerConfig
+from src.components.model_trainer import modelTrainer
 """
 this class wil configure the data ingestion component 
 It will define things like where to store raw data
@@ -21,7 +23,7 @@ class DataIngestionConfig:
     test_data_path: str=os.path.join('artifacts','test.csv')
     raw_data_path: str=os.path.join('artifacts','data.csv')
 
-# if you have a calls having fun+car prefer init
+# if you have a class having fun+car prefer init
 class dataIngestion:
     """
     Read dataset -> make train,test,raw csv and folders -> return train test paths
@@ -37,8 +39,8 @@ class dataIngestion:
             df=pd.read_csv('notebook\data\stud.csv')
             logging.info("Read the dataset as dataframe")
 
-            #now let us make directories(folders) for our train,test,raw data
-            # test data directory
+            #now let us make directory for our train,test,raw data
+            # test data directory(if artifacts folder not there it will make it)
             os.makedirs(os.path.dirname(self.ingestion_config.test_data_path),exist_ok=True)# this will prevent delete and remaking new folder every time
             # saving our raw data as csv    
             df.to_csv(self.ingestion_config.raw_data_path, index=False, header=True)
@@ -61,4 +63,7 @@ if __name__=="__main__":
     obj=dataIngestion()
     train_data, test_data = obj.initiate_data_ingestion()
     data_transformation= DataTransformation()
-    data_transformation.initialize_data_transformation(train_data,test_data)
+    train_arr,test_arr,_=data_transformation.initialize_data_transformation(train_data,test_data)
+
+    ModelTrainer=modelTrainer()
+    print(ModelTrainer.initiate_model_trainer(train_arr, test_arr))
