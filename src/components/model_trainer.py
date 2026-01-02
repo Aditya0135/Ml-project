@@ -50,9 +50,35 @@ class modelTrainer:
                 "XGBRegressor": XGBRegressor(), 
                 "AdaBoost Regressor": AdaBoostRegressor()
             }
+            # Hyperparameter tuning
+            params={
+                "Decision Tree":{
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                },
+                "Random Forest Regressor":{
+                    'n_estimators':[8,16,32,64,128,256]
+                },
+                "K-Neighbors Regressor":{
+                    'n_neighbors':[5,7,9,11],
+                    'weights':['uniform','distance'],
+                    'algorithm':['auto','ball_tree','kd_tree']
+                },
+                "Linear Regression":{},
+                "Lasso":{},
+                "Ridge":{},
+                "XGBRegressor":{
+                    'learning_rate':[0.1,0.01,0.05,0.15],
+                    'max_depth':[3,4,5,6],
+                    'n_estimators':[50,100,200,300]
+                },
+                "AdaBoost Regressor":{
+                    'n_estimators':[50,100,200,300],
+                    'learning_rate':[0.1,0.01,0.05,0.5]
+                }
 
+            }
             model_report:dict = evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
-                                               models=models)
+                                               models=models,params=params)
             
             best_model_score = max(sorted(model_report.values()))
             best_model_name = list(model_report.keys())[
